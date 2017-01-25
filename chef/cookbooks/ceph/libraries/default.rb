@@ -6,7 +6,7 @@ def is_crowbar?()
   return defined?(Chef::Recipe::Barclamp) != nil
 end
 
-def get_node_name
+def get_node_name(node)
   net_name = node["ceph"]["client_network"]
   node_name = node["hostname"]
   if net_name == "admin"
@@ -89,7 +89,7 @@ end
 
 def get_mon_addresses()
   mon_ips = []
-  node_name = get_node_name
+  node_name = get_node_name(node)
   if File.exist?("/var/run/ceph/ceph-mon.#{node_name}.asok")
     mon_ips = get_quorum_members_ips()
   else
@@ -121,7 +121,7 @@ end
 
 def get_quorum_members_ips()
   mon_ips = []
-  node_name = get_node_name
+  node_name = get_node_name(node)
   mon_status = `ceph --admin-daemon /var/run/ceph/ceph-mon.#{node_name}.asok mon_status`
   raise "getting quorum members failed" unless $?.exitstatus == 0
 
@@ -143,7 +143,7 @@ def have_quorum?()
   # in the ceph tool, this exits immediately if the ceph-mon is not
   # running for any reason; trying to connect via TCP/IP would wait
   # for a relatively long timeout.
-  node_name = get_node_name
+  node_name = get_node_name(node)
   mon_status = `ceph --admin-daemon /var/run/ceph/ceph-mon.#{node_name}.asok mon_status`
   raise "getting monitor state failed" unless $?.exitstatus.zero?
   state = JSON.parse(mon_status)["state"]

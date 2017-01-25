@@ -20,7 +20,7 @@ include_recipe "ceph::conf"
 
 service_type = node["ceph"]["mon"]["init_style"]
 
-mon_name = get_node_name
+mon_name = get_node_name(node)
 
 directory "/var/lib/ceph/mon/ceph-#{mon_name}" do
   owner "ceph"

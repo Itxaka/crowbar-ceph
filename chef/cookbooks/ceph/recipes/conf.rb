@@ -6,10 +6,7 @@ mon_addr = get_mon_addresses
 
 mon_init = []
 mon_nodes.each do |monitor|
-  mon_name = monitor.name.split(".")[0]
-  net_name = node["ceph"]["client_network"]
-  mon_name = net_name + "." + mon_name unless net_name == "admin"
-  mon_init << mon_name
+  mon_init << get_node_name(monitor)
 end
 
 unless node["platform_family"] == "suse"
@@ -120,7 +117,7 @@ template "/etc/ceph/ceph.conf" do
     public_network: node["ceph"]["config"]["public-network"],
     cluster_network: node["ceph"]["config"]["cluster-network"],
     is_rgw: is_rgw,
-    rgw_hostname: get_node_name,
+    rgw_hostname: get_node_name(node),
     rgw_port: rgw_port,
     rgw_pemfile: rgw_pemfile,
     keystone_settings: node["platform_family"] == "suse" ? {} : keystone_settings
@@ -164,7 +161,7 @@ if is_rgw && node["platform_family"] == "suse"
       public_network: node["ceph"]["config"]["public-network"],
       cluster_network: node["ceph"]["config"]["cluster-network"],
       is_rgw: is_rgw,
-      rgw_hostname: get_node_name,
+      rgw_hostname: get_node_name(node),
       rgw_port: rgw_port,
       rgw_pemfile: rgw_pemfile,
       keystone_settings: keystone_settings

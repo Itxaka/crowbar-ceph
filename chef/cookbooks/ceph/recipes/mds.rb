@@ -22,7 +22,7 @@ else
 end
 include_recipe "ceph::server"
 
-mds_name = get_node_name
+mds_name = get_node_name(node)
 
 directory "/var/lib/ceph/mds/ceph-#{mds_name}" do
   owner "ceph"

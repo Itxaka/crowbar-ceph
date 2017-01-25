@@ -11,7 +11,7 @@ node["ceph"]["radosgw"]["packages"].each do |pkg|
   package pkg
 end
 
-rgw_hostname = get_node_name
+rgw_hostname = get_node_name(node)
 service_name = "ceph-radosgw@rgw.#{rgw_hostname}"
 
 include_recipe "ceph::radosgw_civetweb"

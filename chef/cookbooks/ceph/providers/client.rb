@@ -28,7 +28,7 @@ action :add do
 end
 
 def load_current_resource
-  node_name = get_node_name
+  node_name = get_node_name(node)
   @current_resource = Chef::Resource::CephClient.new(@new_resource.name)
   @current_resource.ceph_conf(@new_resource.ceph_conf)
   @current_resource.admin_keyring(@new_resource.admin_keyring)
